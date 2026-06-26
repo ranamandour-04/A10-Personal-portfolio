@@ -29,6 +29,8 @@ var carouselCards = document.querySelectorAll(".testimonial-card");
 var nextCarouselBtn = document.querySelector("#next-testimonial");
 var prevCarouselBtn = document.querySelector("#prev-testimonial");
 var carouselIdicatorBtns = document.querySelectorAll(".carousel-indicator");
+var sections = document.querySelectorAll("section");
+
 // ^ initializations
 getInitialStyle();
 // ^ btns event handeling
@@ -36,9 +38,8 @@ themeToggleBtn.addEventListener("click", function () {
   document.documentElement.classList.toggle("dark");
 });
 heroLink.addEventListener("click", function () {
-  if (this.classList.contains("active")) {
-    return;
-  } else {
+  if (this.classList.contains("active")) return;
+  else {
     this.classList.add("active");
     for (var i = 0; i < navLinks.length; i++) {
       if (navLinks[i] !== this) {
@@ -459,6 +460,29 @@ resetSettings.addEventListener("click", function () {
   });
   settingsCloseBtn.click();
 });
+//* scroll spy
+window.addEventListener("scroll", () => {
+  let current = "";
+
+  sections.forEach((section) => {
+    var top = section.offsetTop - 120;
+    var height = section.offsetHeight;
+
+    if (window.scrollY >= top && window.scrollY < top + height) {
+      current = section.id;
+    }
+  });
+
+  navLinks.forEach((link) => {
+    link.classList.remove("active");
+
+    if (link.getAttribute("href") === `#${current}`) {
+      link.classList.add("active");
+      if (current === "hero-section") hideScrollToTopBtn();
+      else showScrollToTopBtn();
+    }
+  });
+});
 // ^ functions
 fontOptionBtns.forEach(function (clickedbtn) {
   clickedbtn.addEventListener("click", function () {
@@ -511,10 +535,6 @@ function getInitialStyle() {
     "font-tajawal",
     "font-cairo",
   );
-  // if (selectedFont !== "sansserif") {
-  //   document.body.classList.add("font-" + selectedFont);
-  // }
-  // console.log(localStorage.getItem("activeFontBtn"));
 }
 function showScrollToTopBtn() {
   scrollToTopBtn.classList.remove("invisible");
